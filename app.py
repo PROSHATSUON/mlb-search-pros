@@ -90,3 +90,9 @@ def embed_youtube_player(video_id, start_time, playback_rate=1.0):
             }}
         </script>
     """, height=350)
+for entry in matched:
+    start = int(entry['start'])
+    text = entry['text']
+    st.markdown(f"**🗣 {text}**")
+    embed_youtube_player(video_id, start_time=start, playback_rate=0.75)
+    st.markdown("---")
