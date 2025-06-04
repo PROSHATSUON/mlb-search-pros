@@ -58,3 +58,35 @@ if keyword:
                 st.warning(f"字幕取得時にエラーが発生しました：{e}")
 
         show_matched_captions(video_id, keyword)
+def embed_youtube_player(video_id, start_time, playback_rate=1.0):
+    st.markdown("#### 🎥 このシーンから再生")
+    st.components.v1.html(f"""
+        <iframe
+            width="100%"
+            height="315"
+            src="https://www.youtube.com/embed/{video_id}?start={start_time}&autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            id="ytplayer"
+        ></iframe>
+        <script>
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            var player;
+            function onYouTubeIframeAPIReady() {{
+                player = new YT.Player('ytplayer', {{
+                    events: {{
+                        'onReady': onPlayerReady
+                    }}
+                }});
+            }}
+
+            function onPlayerReady(event) {{
+                event.target.setPlaybackRate({playback_rate});
+            }}
+        </script>
+    """, height=350)
