@@ -38,3 +38,23 @@ if keyword:
             title = item["snippet"]["title"]
             st.markdown(f"### [{title}](https://www.youtube.com/watch?v={video_id})")
             st.video(f"https://www.youtube.com/watch?v={video_id}")
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
+
+# 動画IDごとに字幕を取得して表示する関数
+def show_captions(video_id):
+    try:
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
+        st.markdown("### 📘 英語字幕（自動生成含む）")
+        for entry in transcript:
+            st.markdown(f"- {entry['text']}")
+    except TranscriptsDisabled:
+        st.info("この動画には字幕が無効になっています。")
+    except NoTranscriptFound:
+        st.info("字幕が見つかりませんでした。")
+    except Exception as e:
+        st.warning(f"字幕取得時にエラーが発生しました：{e}")
+show_captions(video_id)
+st.markdown(f"### [{title}](https://www.youtube.com/watch?v={video_id})")
+st.video(f"https://www.youtube.com/watch?v={video_id}")
+show_captions(video_id)  # ← 字幕を表示
